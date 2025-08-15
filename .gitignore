@@ -109,3 +109,13 @@ run-game.bat
 run-game.sh
 run-swing-game.bat
 compile-and-run.bat
+=======
+# https://maven.apache.org/wrapper/#usage-without-binary-jar
+.mvn/wrapper/maven-wrapper.jar
+
+# Eclipse m2e generated files
+# Eclipse Core
+.project
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+>>>>>>> 7da43c3970561b5873521524ffcd982c5625bb26
