@@ -2,7 +2,7 @@ package com.hangman;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+// Removed unused import
 import java.awt.RenderingHints;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -300,17 +300,17 @@ public class HangmanSwingGUI extends JFrame {
     private void setupEventHandlers() {
         // Keyboard button handlers
         for (JButton button : keyboardButtons) {
-            button.addActionListener(e -> {
+            button.addActionListener(_ -> {
                 Character letter = (Character) button.getClientProperty("letter");
                 handleLetterGuess(letter);
             });
         }
         
         // Hint button
-        hintButton.addActionListener(e -> useHint());
+        hintButton.addActionListener(_ -> useHint());
         
         // Pause button
-        pauseButton.addActionListener(e -> togglePause());
+        pauseButton.addActionListener(_ -> togglePause());
     }
     
     private void handleLetterGuess(char letter) {
