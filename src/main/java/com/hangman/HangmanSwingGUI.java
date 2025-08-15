@@ -10,11 +10,10 @@ import java.util.Random;
 import java.util.List;
 import java.util.ArrayList;
 
-public class SimpleHangmanGame extends JFrame {
+public class HangmanSwingGUI extends JFrame {
     
-    private static final String[] CATEGORIES = {"Mythology", "Animals", "Countries", "Food", "Sports"};
+    private static final String[] CATEGORIES = {"Animals", "Countries", "Food", "Sports"};
     private static final String[][] WORDS = {
-        {"ZEUS", "APOLLO", "ATHENA", "POSEIDON", "HERMES"}, // Mythology
         {"LION", "TIGER", "ELEPHANT", "GIRAFFE", "PANDA"}, // Animals
         {"FRANCE", "JAPAN", "BRAZIL", "EGYPT", "CANADA"}, // Countries
         {"PIZZA", "BURGER", "SUSHI", "PASTA", "STEAK"}, // Food
@@ -47,12 +46,12 @@ public class SimpleHangmanGame extends JFrame {
     private ExecutorService gameExecutor;
     private Random random;
     
-    public SimpleHangmanGame() {
+    public HangmanSwingGUI() {
         initializeGame();
         createUI();
         setupEventHandlers();
         
-        setTitle("🎯 Hangman Game - Word Guessing Adventure");
+        setTitle("Hangman Game - Swing GUI");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 750);
         setLocationRelativeTo(null);
@@ -90,17 +89,17 @@ public class SimpleHangmanGame extends JFrame {
         topSection.setBackground(Color.WHITE);
         
         // Create styled panels for each stat
-        JPanel diamondsPanel = createStatPanel("💎", diamonds, new Color(0, 191, 255));
-        JPanel trophiesPanel = createStatPanel("🏆", trophies, new Color(255, 215, 0));
-        JPanel scorePanel = createStatPanel("⭐", score, new Color(255, 69, 0));
+        JPanel diamondsPanel = createStatPanel("Diamonds", diamonds, new Color(0, 191, 255));
+        JPanel trophiesPanel = createStatPanel("Trophies", trophies, new Color(255, 215, 0));
+        JPanel scorePanel = createStatPanel("Score", score, new Color(255, 69, 0));
         
-        diamondsLabel = (JLabel) diamondsPanel.getComponent(1);
-        trophiesLabel = (JLabel) trophiesPanel.getComponent(1);
-        scoreLabel = (JLabel) scorePanel.getComponent(1);
+        diamondsLabel = (JLabel) diamondsPanel.getComponent(0);
+        trophiesLabel = (JLabel) trophiesPanel.getComponent(0);
+        scoreLabel = (JLabel) scorePanel.getComponent(0);
         
-        pauseButton = new JButton("⏸");
-        pauseButton.setPreferredSize(new Dimension(50, 50));
-        pauseButton.setFont(new Font("Arial", Font.BOLD, 20));
+        pauseButton = new JButton("PAUSE");
+        pauseButton.setPreferredSize(new Dimension(80, 50));
+        pauseButton.setFont(new Font("Arial", Font.BOLD, 12));
         pauseButton.setBackground(Color.WHITE);
         pauseButton.setForeground(Color.BLACK);
         pauseButton.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -114,7 +113,7 @@ public class SimpleHangmanGame extends JFrame {
         return topSection;
     }
     
-    private JPanel createStatPanel(String icon, int value, Color color) {
+    private JPanel createStatPanel(String title, int value, Color color) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
         panel.setBackground(Color.WHITE);
         panel.setBorder(BorderFactory.createCompoundBorder(
@@ -122,15 +121,10 @@ public class SimpleHangmanGame extends JFrame {
             BorderFactory.createEmptyBorder(8, 15, 8, 15)
         ));
         
-        JLabel iconLabel = new JLabel(icon);
-        iconLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        iconLabel.setForeground(color);
-        
-        JLabel valueLabel = new JLabel(String.valueOf(value));
+        JLabel valueLabel = new JLabel(title + ": " + value);
         valueLabel.setFont(new Font("Arial", Font.BOLD, 18));
         valueLabel.setForeground(Color.BLACK);
         
-        panel.add(iconLabel);
         panel.add(valueLabel);
         
         return panel;
@@ -224,7 +218,7 @@ public class SimpleHangmanGame extends JFrame {
         rightSide.setBackground(Color.WHITE);
         
         // Level
-        JLabel levelTitleLabel = new JLabel("🎯 Level " + level);
+        JLabel levelTitleLabel = new JLabel("Level " + level);
         levelTitleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
         levelTitleLabel.setForeground(new Color(255, 215, 0));
         levelTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -248,7 +242,7 @@ public class SimpleHangmanGame extends JFrame {
         hangmanPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         // Hint button
-        hintButton = new JButton("💡 Hint (10 💎)");
+        hintButton = new JButton("Hint (10 Diamonds)");
         hintButton.setPreferredSize(new Dimension(150, 45));
         hintButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
         hintButton.setBackground(Color.WHITE);
@@ -293,20 +287,6 @@ public class SimpleHangmanGame extends JFrame {
                 ));
                 button.setFocusPainted(false);
                 button.putClientProperty("letter", c);
-                
-                // Add hover effect
-                button.addMouseListener(new java.awt.event.MouseAdapter() {
-                    public void mouseEntered(java.awt.event.MouseEvent evt) {
-                        if (button.isEnabled()) {
-                            button.setBackground(new Color(240, 240, 240));
-                        }
-                    }
-                    public void mouseExited(java.awt.event.MouseEvent evt) {
-                        if (button.isEnabled()) {
-                            button.setBackground(Color.WHITE);
-                        }
-                    }
-                });
                 
                 buttons[buttonIndex++] = button;
                 rowPanel.add(button);
@@ -366,7 +346,7 @@ public class SimpleHangmanGame extends JFrame {
         if (diamonds < 10 || gameOver || paused) return;
         
         diamonds -= 10;
-        diamondsLabel.setText("💎 " + diamonds);
+        diamondsLabel.setText("Diamonds: " + diamonds);
         
         // Find an unguessed letter
         for (int i = 0; i < currentWord.length(); i++) {
@@ -385,9 +365,9 @@ public class SimpleHangmanGame extends JFrame {
     private void togglePause() {
         paused = !paused;
         if (paused) {
-            pauseButton.setText("▶");
+            pauseButton.setText("RESUME");
         } else {
-            pauseButton.setText("⏸");
+            pauseButton.setText("PAUSE");
         }
     }
     
@@ -463,12 +443,26 @@ public class SimpleHangmanGame extends JFrame {
                 if (currentWord.indexOf(letter) >= 0) {
                     button.setBackground(new Color(76, 175, 80)); // Green for correct
                     button.setForeground(Color.WHITE);
-                    button.setEnabled(false);
+                    button.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(76, 175, 80), 3),
+                        BorderFactory.createEmptyBorder(5, 5, 5, 5)
+                    ));
                 } else {
                     button.setBackground(new Color(244, 67, 54)); // Red for incorrect
                     button.setForeground(Color.WHITE);
-                    button.setEnabled(false);
+                    button.setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createLineBorder(new Color(244, 67, 54), 3),
+                        BorderFactory.createEmptyBorder(5, 5, 5, 5)
+                    ));
                 }
+            } else {
+                // Reset to default state for unguessed letters
+                button.setBackground(Color.WHITE);
+                button.setForeground(Color.BLACK);
+                button.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(100, 100, 100), 2),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)
+                ));
             }
         }
     }
@@ -490,18 +484,18 @@ public class SimpleHangmanGame extends JFrame {
     }
     
     private void showGameOverDialog(boolean won) {
-        String title = won ? "🎉 Congratulations! 🎉" : "💀 Game Over! 💀";
+        String title = won ? "Congratulations!" : "Game Over!";
         String message = won ? 
-            "🎯 You won!\n\n" +
-            "⭐ Score: " + score + "\n" +
-            "🏆 Level: " + level + "\n" +
-            "💎 Diamonds: " + diamonds + "\n" +
-            "🏆 Trophies: " + trophies + "\n\n" +
+            "You won!\n\n" +
+            "Score: " + score + "\n" +
+            "Level: " + level + "\n" +
+            "Diamonds: " + diamonds + "\n" +
+            "Trophies: " + trophies + "\n\n" +
             "Would you like to play again?" :
-            "💀 Game Over!\n\n" +
-            "📝 The word was: " + currentWord + "\n" +
-            "⭐ Score: " + score + "\n" +
-            "🏆 Level: " + level + "\n\n" +
+            "Game Over!\n\n" +
+            "The word was: " + currentWord + "\n" +
+            "Score: " + score + "\n" +
+            "Level: " + level + "\n\n" +
             "Would you like to try again?";
         
         // Custom styling for the dialog - White theme
@@ -522,8 +516,8 @@ public class SimpleHangmanGame extends JFrame {
     private void updateScoreDisplay() {
         scoreLabel.setText("Score: " + score);
         levelLabel.setText("Level: " + level);
-        diamondsLabel.setText("💎 " + diamonds);
-        trophiesLabel.setText("🏆 " + trophies);
+        diamondsLabel.setText("Diamonds: " + diamonds);
+        trophiesLabel.setText("Trophies: " + trophies);
     }
     
     private void startNewGame() {
@@ -551,7 +545,10 @@ public class SimpleHangmanGame extends JFrame {
         for (JButton button : keyboardButtons) {
             button.setBackground(Color.WHITE);
             button.setForeground(Color.BLACK);
-            button.setEnabled(true);
+            button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(100, 100, 100), 2),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+            ));
         }
         
         updateScoreDisplay();
@@ -565,7 +562,7 @@ public class SimpleHangmanGame extends JFrame {
                 e.printStackTrace();
             }
             
-            SimpleHangmanGame game = new SimpleHangmanGame();
+            HangmanSwingGUI game = new HangmanSwingGUI();
             game.setVisible(true);
         });
     }

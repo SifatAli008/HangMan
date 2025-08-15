@@ -1,24 +1,23 @@
 @echo off
-echo 🎯 Compiling and Running Hangman Game...
+echo 🎯 Compiling and Running Simple Hangman Game...
 echo.
 
 REM Create target directory if it doesn't exist
 if not exist "target\classes" mkdir "target\classes"
 
-REM Compile the core engine and console game
-echo Compiling...
-javac -d target/classes src/main/java/com/hangman/core/HangmanGameEngine.java
-javac -d target/classes src/main/java/com/hangman/ConsoleHangmanGame.java
+REM Compile the simple game (no dependencies needed)
+echo Compiling SimpleHangmanGame...
+javac -d target/classes src/main/java/com/hangman/SimpleHangmanGame.java
 
 if %ERRORLEVEL% EQU 0 (
     echo.
     echo ✅ Compilation successful! Starting the game...
     echo.
     echo ========================================
-    echo 🎮 HANGMAN GAME - CONSOLE VERSION
+    echo 🎮 HANGMAN GAME - SIMPLE VERSION
     echo ========================================
     echo.
-    java -cp target/classes com.hangman.ConsoleHangmanGame
+    java -cp target/classes com.hangman.SimpleHangmanGame
 ) else (
     echo.
     echo ❌ Compilation failed! Please check for errors.

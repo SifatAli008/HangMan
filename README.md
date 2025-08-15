@@ -1,105 +1,83 @@
 # Hangman Game
 
-A modern Hangman game built with Java, JavaFX, and threads featuring a beautiful UI with categories, scoring system, and interactive gameplay.
+A modern Java implementation of the classic Hangman word guessing game using JavaFX for a beautiful, modern interface.
 
 ## Features
 
-- **Multiple Categories**: Mythology, Animals, Countries, Food, and Sports
-- **Interactive Keyboard**: Click letters to guess, visual feedback for correct/incorrect guesses
-- **Visual Hangman**: Canvas-based drawing that builds as you make wrong guesses
-- **Scoring System**: Earn points, diamonds, and trophies as you progress
-- **Hint System**: Use diamonds to get hints when stuck
-- **Pause Functionality**: Pause and resume the game at any time
-- **Level Progression**: Advance through levels as you win
-- **Threading**: Uses Java threads for smooth gameplay and UI responsiveness
-
-## Requirements
-
-- Java 17 or higher
-- Maven 3.6 or higher
-- JavaFX 17 (included in dependencies)
-
-## How to Run
-
-### Option 1: Using Maven (Recommended)
-
-1. **Clone or download the project**
-2. **Open terminal/command prompt in the project directory**
-3. **Run the game:**
-   ```bash
-   mvn clean javafx:run
-   ```
-
-### Option 2: Using IDE
-
-1. **Open the project in your IDE (IntelliJ IDEA, Eclipse, VS Code)**
-2. **Ensure Maven dependencies are downloaded**
-3. **Run the `HangmanGame.java` file**
-
-### Option 3: Manual Compilation
-
-1. **Compile the project:**
-   ```bash
-   mvn clean compile
-   ```
-2. **Run the compiled JAR:**
-   ```bash
-   mvn exec:java -Dexec.mainClass="com.hangman.HangmanGame"
-   ```
-
-## Game Rules
-
-1. **Objective**: Guess the hidden word before the hangman is fully drawn
-2. **Guessing**: Click on keyboard letters to make guesses
-3. **Correct Guesses**: Reveal letters in the word
-4. **Wrong Guesses**: Add parts to the hangman (6 wrong guesses = game over)
-5. **Hints**: Spend 10 diamonds to reveal a letter
-6. **Scoring**: 
-   - Win: +100 points, +1 level, +20 diamonds, +1 trophy
-   - Lose: Game over, can restart
-
-## Controls
-
-- **Letter Buttons**: Click to guess letters
-- **Hint Button**: Use diamonds to get help
-- **Pause Button**: Pause/resume the game
-- **New Game**: Start over after winning or losing
+- **Modern JavaFX Interface**: Beautiful, responsive UI with smooth animations
+- **Smart Game Engine**: Core game logic separated from UI for maintainability
+- **Rich Gameplay**: Categories, scoring system, hints, and progression
+- **Professional Design**: Clean, modern interface with intuitive controls
 
 ## Project Structure
 
 ```
-HangMan/
-├── src/main/java/com/hangman/
-│   └── HangmanGame.java          # Main game class
-├── pom.xml                       # Maven configuration
-└── README.md                     # This file
+src/main/java/com/hangman/
+├── core/
+│   └── HangmanGameEngine.java          # Core game logic engine
+├── gui/
+│   └── JavaFXHangmanGame.java          # JavaFX-based GUI implementation
+└── HangmanGameLauncher.java            # Main launcher
 ```
 
-## Technical Details
+## How to Run
 
-- **JavaFX**: Modern UI framework for desktop applications
-- **Threading**: Uses `ExecutorService` for game logic and `ScheduledExecutorService` for timers
-- **Canvas Graphics**: Custom drawing for the hangman visualization
-- **Event Handling**: Responsive UI with proper event management
-- **Maven**: Dependency management and build automation
+### Option 1: Launcher (Recommended)
+```bash
+java -cp target/classes com.hangman.HangmanGameLauncher
+```
+This will launch the JavaFX version directly.
 
-## Customization
+### Option 2: Direct Launch
+```bash
+# JavaFX version
+java -cp target/classes com.hangman.gui.JavaFXHangmanGame
+```
 
-You can easily customize the game by:
-- Adding new categories and words in the `WORDS` array
-- Modifying the scoring system
-- Changing colors and styling in the UI
-- Adding sound effects or animations
-- Implementing a high score system
+## Building the Project
 
-## Troubleshooting
+```bash
+# Compile
+javac -d target/classes src/main/java/com/hangman/**/*.java
 
-- **JavaFX not found**: Ensure you have Java 17+ and the project dependencies are properly downloaded
-- **Compilation errors**: Check that your Java version matches the project requirements
-- **Runtime errors**: Verify all Maven dependencies are resolved
+# Run
+java -cp target/classes com.hangman.HangmanGameLauncher
+```
+
+## Game Features
+
+- **Categories**: Mythology, Animals, Countries, Food, Sports
+- **Scoring System**: Points, levels, diamonds, and trophies
+- **Hints**: Use diamonds to reveal letters (costs 10 diamonds)
+- **Progressive Difficulty**: Levels increase with each win
+- **Visual Feedback**: Hangman drawing and keyboard highlighting
+
+## Requirements
+
+- **Java 11+** (JavaFX is included in Java 11+)
+- **Maven** (optional, for dependency management)
+
+## Architecture
+
+The project follows a clean architecture pattern:
+
+- **Core Engine** (`HangmanGameEngine`): Contains all game logic, state management, and business rules
+- **GUI Layer** (`gui` package): JavaFX-based user interface
+- **Launcher** (`HangmanGameLauncher`): Simple entry point that launches the JavaFX game
+
+This separation allows for:
+- Easy testing of game logic
+- Clean separation between business logic and UI
+- Maintainable and extensible codebase
+
+## Contributing
+
+Feel free to contribute by:
+- Adding new word categories
+- Improving the UI design
+- Adding new game features
+- Optimizing the game engine
 
 ## License
 
-This project is open source and available under the MIT License.
-
-Enjoy playing Hangman! :-)
+This project is open source and available under the [LICENSE](LICENSE) file.
