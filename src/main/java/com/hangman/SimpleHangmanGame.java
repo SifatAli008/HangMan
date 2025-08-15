@@ -3,6 +3,7 @@ package com.hangman;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.RenderingHints;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.Random;
@@ -51,9 +52,9 @@ public class SimpleHangmanGame extends JFrame {
         createUI();
         setupEventHandlers();
         
-        setTitle("Hangman Game");
+        setTitle("🎯 Hangman Game - Word Guessing Adventure");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1000, 750);
         setLocationRelativeTo(null);
         setResizable(false);
         
@@ -84,26 +85,55 @@ public class SimpleHangmanGame extends JFrame {
     }
     
     private JPanel createTopSection() {
-        JPanel topSection = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
-        topSection.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        JPanel topSection = new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 15));
+        topSection.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        topSection.setBackground(Color.WHITE);
         
-        diamondsLabel = new JLabel("💎 " + diamonds);
-        diamondsLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        diamondsLabel.setForeground(Color.BLUE);
+        // Create styled panels for each stat
+        JPanel diamondsPanel = createStatPanel("💎", diamonds, new Color(0, 191, 255));
+        JPanel trophiesPanel = createStatPanel("🏆", trophies, new Color(255, 215, 0));
+        JPanel scorePanel = createStatPanel("⭐", score, new Color(255, 69, 0));
         
-        trophiesLabel = new JLabel("🏆 " + trophies);
-        trophiesLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        trophiesLabel.setForeground(Color.ORANGE);
+        diamondsLabel = (JLabel) diamondsPanel.getComponent(1);
+        trophiesLabel = (JLabel) trophiesPanel.getComponent(1);
+        scoreLabel = (JLabel) scorePanel.getComponent(1);
         
         pauseButton = new JButton("⏸");
-        pauseButton.setPreferredSize(new Dimension(40, 40));
+        pauseButton.setPreferredSize(new Dimension(50, 50));
+        pauseButton.setFont(new Font("Arial", Font.BOLD, 20));
+        pauseButton.setBackground(Color.WHITE);
+        pauseButton.setForeground(Color.BLACK);
+        pauseButton.setBorder(BorderFactory.createRaisedBevelBorder());
         pauseButton.setFocusPainted(false);
         
-        topSection.add(diamondsLabel);
-        topSection.add(trophiesLabel);
+        topSection.add(diamondsPanel);
+        topSection.add(trophiesPanel);
+        topSection.add(scorePanel);
         topSection.add(pauseButton);
         
         return topSection;
+    }
+    
+    private JPanel createStatPanel(String icon, int value, Color color) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(color, 2),
+            BorderFactory.createEmptyBorder(8, 15, 8, 15)
+        ));
+        
+        JLabel iconLabel = new JLabel(icon);
+        iconLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        iconLabel.setForeground(color);
+        
+        JLabel valueLabel = new JLabel(String.valueOf(value));
+        valueLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        valueLabel.setForeground(Color.BLACK);
+        
+        panel.add(iconLabel);
+        panel.add(valueLabel);
+        
+        return panel;
     }
     
     private JPanel createGameArea() {
@@ -125,34 +155,47 @@ public class SimpleHangmanGame extends JFrame {
     private JPanel createLeftSide() {
         JPanel leftSide = new JPanel();
         leftSide.setLayout(new BoxLayout(leftSide, BoxLayout.Y_AXIS));
-        leftSide.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        leftSide.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        leftSide.setBackground(Color.WHITE);
         
         // Category
         categoryLabel = new JLabel();
-        categoryLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        categoryLabel.setForeground(Color.BLUE);
-        categoryLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        categoryLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        categoryLabel.setForeground(new Color(0, 191, 255));
+        categoryLabel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0, 191, 255), 3),
+            BorderFactory.createEmptyBorder(12, 20, 12, 20)
+        ));
+        categoryLabel.setBackground(Color.WHITE);
+        categoryLabel.setOpaque(true);
         categoryLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        categoryLabel.setPreferredSize(new Dimension(200, 40));
-        categoryLabel.setMaximumSize(new Dimension(200, 40));
+        categoryLabel.setPreferredSize(new Dimension(250, 50));
+        categoryLabel.setMaximumSize(new Dimension(250, 50));
+        categoryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         // Word to guess
         wordLabel = new JLabel();
-        wordLabel.setFont(new Font("Arial", Font.BOLD, 30));
-        wordLabel.setForeground(Color.BLUE);
+        wordLabel.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        wordLabel.setForeground(Color.BLACK);
         wordLabel.setHorizontalAlignment(SwingConstants.CENTER);
         wordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        wordLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         
-        // Score and level
-        scoreLabel = new JLabel("Score: " + score);
-        scoreLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
+        // Level
         levelLabel = new JLabel("Level: " + level);
-        levelLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        levelLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        levelLabel.setForeground(new Color(255, 215, 0));
         levelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        levelLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
+        
+        // Score
+        scoreLabel = new JLabel("Score: " + score);
+        scoreLabel.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        scoreLabel.setForeground(new Color(255, 69, 0));
+        scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        scoreLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        scoreLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 20, 0));
         
         // Keyboard
         keyboardButtons = createKeyboard();
@@ -177,14 +220,16 @@ public class SimpleHangmanGame extends JFrame {
     private JPanel createRightSide() {
         JPanel rightSide = new JPanel();
         rightSide.setLayout(new BoxLayout(rightSide, BoxLayout.Y_AXIS));
-        rightSide.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        rightSide.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+        rightSide.setBackground(Color.WHITE);
         
         // Level
-        JLabel levelTitleLabel = new JLabel("Level " + level);
-        levelTitleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        levelTitleLabel.setForeground(Color.BLUE);
+        JLabel levelTitleLabel = new JLabel("🎯 Level " + level);
+        levelTitleLabel.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        levelTitleLabel.setForeground(new Color(255, 215, 0));
         levelTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         levelTitleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        levelTitleLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         
         // Hangman panel
         hangmanPanel = new JPanel() {
@@ -194,13 +239,21 @@ public class SimpleHangmanGame extends JFrame {
                 drawHangman(g);
             }
         };
-        hangmanPanel.setPreferredSize(new Dimension(300, 300));
-        hangmanPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        hangmanPanel.setPreferredSize(new Dimension(320, 320));
+        hangmanPanel.setBackground(Color.WHITE);
+        hangmanPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(0, 191, 255), 3),
+            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+        ));
         hangmanPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         // Hint button
         hintButton = new JButton("💡 Hint (10 💎)");
-        hintButton.setPreferredSize(new Dimension(120, 40));
+        hintButton.setPreferredSize(new Dimension(150, 45));
+        hintButton.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        hintButton.setBackground(Color.WHITE);
+        hintButton.setForeground(Color.BLACK);
+        hintButton.setBorder(BorderFactory.createRaisedBevelBorder());
         hintButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         hintButton.setFocusPainted(false);
         
@@ -208,7 +261,7 @@ public class SimpleHangmanGame extends JFrame {
         rightSide.add(levelTitleLabel);
         rightSide.add(Box.createVerticalStrut(20));
         rightSide.add(hangmanPanel);
-        rightSide.add(Box.createVerticalStrut(20));
+        rightSide.add(Box.createVerticalStrut(25));
         rightSide.add(hintButton);
         rightSide.add(Box.createVerticalGlue());
         
@@ -216,24 +269,44 @@ public class SimpleHangmanGame extends JFrame {
     }
     
     private JButton[] createKeyboard() {
-        String[] rows = {"QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"};
+        // Create alphabetical layout: A-Z in 3 rows
+        String[] rows = {"ABCDEFGHI", "JKLMNOPQR", "STUVWXYZ"};
         JButton[] buttons = new JButton[26];
         int buttonIndex = 0;
         
-        JPanel keyboardPanel = new JPanel(new GridLayout(3, 1, 2, 2));
+        JPanel keyboardPanel = new JPanel(new GridLayout(3, 1, 5, 5));
         keyboardPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        keyboardPanel.setBackground(Color.WHITE);
         
         for (String row : rows) {
-            JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 2, 2));
+            JPanel rowPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 4, 4));
+            rowPanel.setBackground(Color.WHITE);
             for (char c : row.toCharArray()) {
                 JButton button = new JButton(String.valueOf(c));
-                button.setPreferredSize(new Dimension(30, 30));
-                button.setFont(new Font("Arial", Font.BOLD, 12));
-                button.setFocusPainted(false);
+                button.setPreferredSize(new Dimension(40, 40));
+                button.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 button.setBackground(Color.WHITE);
                 button.setForeground(Color.BLACK);
-                button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                button.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(100, 100, 100), 2),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)
+                ));
+                button.setFocusPainted(false);
                 button.putClientProperty("letter", c);
+                
+                // Add hover effect
+                button.addMouseListener(new java.awt.event.MouseAdapter() {
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        if (button.isEnabled()) {
+                            button.setBackground(new Color(240, 240, 240));
+                        }
+                    }
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        if (button.isEnabled()) {
+                            button.setBackground(Color.WHITE);
+                        }
+                    }
+                });
                 
                 buttons[buttonIndex++] = button;
                 rowPanel.add(button);
@@ -320,40 +393,59 @@ public class SimpleHangmanGame extends JFrame {
     
     private void drawHangman(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setStroke(new BasicStroke(3));
-        g2d.setColor(Color.BLACK);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setStroke(new BasicStroke(4));
         
-        // Draw gallows
-        g2d.drawLine(50, 250, 250, 250); // Base
-        g2d.drawLine(150, 250, 150, 50);  // Vertical post
-        g2d.drawLine(150, 50, 200, 50);   // Top beam
-        g2d.drawLine(200, 50, 200, 80);   // Rope
+        // Draw gallows with better colors
+        g2d.setColor(new Color(139, 69, 19)); // Brown wood
+        g2d.drawLine(60, 260, 260, 260); // Base
+        g2d.drawLine(160, 260, 160, 60);  // Vertical post
+        g2d.drawLine(160, 60, 210, 60);   // Top beam
+        g2d.drawLine(210, 60, 210, 90);   // Rope
         
-        // Draw hangman based on wrong guesses
+        // Draw hangman based on wrong guesses with better styling
         if (wrongGuesses >= 1) {
             // Head
-            g2d.drawOval(180, 80, 40, 40);
+            g2d.setColor(new Color(255, 218, 185)); // Peach skin
+            g2d.fillOval(190, 90, 40, 40);
+            g2d.setColor(new Color(139, 69, 19)); // Brown outline
+            g2d.drawOval(190, 90, 40, 40);
         }
         if (wrongGuesses >= 2) {
             // Body
-            g2d.drawLine(200, 120, 200, 180);
+            g2d.setColor(new Color(70, 130, 180)); // Blue shirt
+            g2d.fillRect(195, 130, 10, 50);
+            g2d.setColor(new Color(139, 69, 19)); // Brown outline
+            g2d.drawRect(195, 130, 10, 50);
         }
         if (wrongGuesses >= 3) {
             // Left arm
-            g2d.drawLine(200, 140, 170, 160);
+            g2d.setColor(new Color(255, 218, 185)); // Peach skin
+            g2d.setStroke(new BasicStroke(8));
+            g2d.drawLine(200, 140, 165, 160);
         }
         if (wrongGuesses >= 4) {
             // Right arm
-            g2d.drawLine(200, 140, 230, 160);
+            g2d.setColor(new Color(255, 218, 185)); // Peach skin
+            g2d.drawLine(200, 140, 235, 160);
         }
         if (wrongGuesses >= 5) {
             // Left leg
-            g2d.drawLine(200, 180, 170, 220);
+            g2d.setColor(new Color(25, 25, 112)); // Dark blue pants
+            g2d.setStroke(new BasicStroke(8));
+            g2d.drawLine(200, 180, 165, 220);
         }
         if (wrongGuesses >= 6) {
             // Right leg
-            g2d.drawLine(200, 180, 230, 220);
+            g2d.setColor(new Color(25, 25, 112)); // Dark blue pants
+            g2d.drawLine(200, 180, 235, 220);
         }
+        
+        // Add some decorative elements
+        g2d.setColor(new Color(0, 191, 255));
+        g2d.setStroke(new BasicStroke(2));
+        g2d.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        g2d.drawString("Wrong Guesses: " + wrongGuesses + "/6", 20, 30);
     }
     
     private void updateWordDisplay() {
@@ -369,10 +461,12 @@ public class SimpleHangmanGame extends JFrame {
             char letter = (Character) button.getClientProperty("letter");
             if (guessedLetters.contains(letter)) {
                 if (currentWord.indexOf(letter) >= 0) {
-                    button.setBackground(Color.LIGHT_GRAY);
+                    button.setBackground(new Color(76, 175, 80)); // Green for correct
+                    button.setForeground(Color.WHITE);
                     button.setEnabled(false);
                 } else {
-                    button.setBackground(Color.PINK);
+                    button.setBackground(new Color(244, 67, 54)); // Red for incorrect
+                    button.setForeground(Color.WHITE);
                     button.setEnabled(false);
                 }
             }
@@ -396,13 +490,27 @@ public class SimpleHangmanGame extends JFrame {
     }
     
     private void showGameOverDialog(boolean won) {
+        String title = won ? "🎉 Congratulations! 🎉" : "💀 Game Over! 💀";
         String message = won ? 
-            "Congratulations!\nYou won!\nScore: " + score + "\nLevel: " + level + "\nDiamonds: " + diamonds + "\nTrophies: " + trophies :
-            "Game Over!\nThe word was: " + currentWord + "\nScore: " + score + "\nLevel: " + level;
+            "🎯 You won!\n\n" +
+            "⭐ Score: " + score + "\n" +
+            "🏆 Level: " + level + "\n" +
+            "💎 Diamonds: " + diamonds + "\n" +
+            "🏆 Trophies: " + trophies + "\n\n" +
+            "Would you like to play again?" :
+            "💀 Game Over!\n\n" +
+            "📝 The word was: " + currentWord + "\n" +
+            "⭐ Score: " + score + "\n" +
+            "🏆 Level: " + level + "\n\n" +
+            "Would you like to try again?";
         
-        int choice = JOptionPane.showConfirmDialog(this, message, 
-            won ? "Congratulations!" : "Game Over!", 
-            JOptionPane.YES_NO_OPTION);
+        // Custom styling for the dialog - White theme
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("OptionPane.foreground", Color.BLACK);
+        UIManager.put("Panel.background", Color.WHITE);
+        
+        int choice = JOptionPane.showConfirmDialog(this, message, title, 
+            JOptionPane.YES_NO_OPTION, won ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE);
         
         if (choice == JOptionPane.YES_OPTION) {
             startNewGame();
@@ -441,7 +549,8 @@ public class SimpleHangmanGame extends JFrame {
         
         // Reset keyboard
         for (JButton button : keyboardButtons) {
-            button.setBackground(null);
+            button.setBackground(Color.WHITE);
+            button.setForeground(Color.BLACK);
             button.setEnabled(true);
         }
         
