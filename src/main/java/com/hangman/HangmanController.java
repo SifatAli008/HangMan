@@ -9,14 +9,20 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.util.Duration;
+import javafx.stage.Modality;
 
 import java.util.Set;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import java.util.Optional;
 
 public class HangmanController {
     
@@ -58,6 +64,33 @@ public class HangmanController {
     }
     
     private void setupKeyboard() {
+        // Clear any existing buttons and constraints
+        keyboardGrid.getChildren().clear();
+        keyboardGrid.getColumnConstraints().clear();
+        keyboardGrid.getRowConstraints().clear();
+        
+        // Reduce gaps between buttons for better space utilization
+        keyboardGrid.setHgap(3);
+        keyboardGrid.setVgap(3);
+        
+        // Set up column constraints for 10 columns with larger width
+        for (int i = 0; i < 10; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPrefWidth(45);
+            col.setMinWidth(45);
+            col.setMaxWidth(45);
+            keyboardGrid.getColumnConstraints().add(col);
+        }
+        
+        // Set up row constraints for 3 rows with larger height
+        for (int i = 0; i < 3; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPrefHeight(45);
+            row.setMinHeight(45);
+            row.setMaxHeight(45);
+            keyboardGrid.getRowConstraints().add(row);
+        }
+        
         String[] letters = {
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J",
             "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
@@ -69,19 +102,33 @@ public class HangmanController {
         
         for (String letter : letters) {
             Button button = new Button(letter);
-            button.setPrefSize(40, 40);
+            button.setPrefSize(45, 45);
+            button.setMinSize(45, 45);
+            button.setMaxSize(45, 45);
             button.setFont(Font.font("Arial", FontWeight.BOLD, 14));
             button.setStyle(getDefaultButtonStyle());
             button.setOnAction(e -> handleLetterGuess(letter.charAt(0)));
             
-            if (col >= 10) {
+            // First row: A-J (10 letters)
+            if (row == 0 && col >= 10) {
                 col = 0;
-                row++;
+                row = 1;
             }
+            // Second row: K-T (10 letters)  
+            else if (row == 1 && col >= 10) {
+                col = 0;
+                row = 2;
+            }
+            // Third row: U-Z (6 letters)
             
             keyboardGrid.add(button, col, row);
             col++;
         }
+        
+        // Debug: Print the grid layout
+        System.out.println("Keyboard grid setup complete. Total buttons: " + keyboardGrid.getChildren().size());
+        System.out.println("Columns: " + keyboardGrid.getColumnConstraints().size());
+        System.out.println("Rows: " + keyboardGrid.getRowConstraints().size());
     }
     
     private String getDefaultButtonStyle() {
@@ -252,46 +299,146 @@ public class HangmanController {
         Set<Character> guessedLetters = gameLogic.getGuessedLetters();
         
         // Find an unguessed letter
+        char hintLetter = ' ';
         for (char c : currentWord.toCharArray()) {
             if (!guessedLetters.contains(c)) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("💡 Hint");
-                alert.setHeaderText("Here's a hint!");
-                alert.setContentText("The word contains the letter: " + c);
-                alert.showAndWait();
-                return;
+                hintLetter = c;
+                break;
             }
         }
         
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("💡 Hint");
-        alert.setHeaderText("No hints available");
-        alert.setContentText("You've already guessed all the letters!");
-        alert.showAndWait();
+        if (hintLetter != ' ') {
+            // Create custom hint dialog
+            Dialog<String> hintDialog = new Dialog<>();
+            hintDialog.setTitle("💡 Hint");
+            hintDialog.initModality(Modality.APPLICATION_MODAL);
+            
+            // Set up the dialog content
+            VBox content = new VBox(15);
+            content.setAlignment(Pos.CENTER);
+            content.setPadding(new Insets(20));
+            content.setStyle("-fx-background-color: white; -fx-border-color: #3498db; -fx-border-width: 2; -fx-border-radius: 10;");
+            
+            // Hint icon and title
+            Label hintIcon = new Label("💡");
+            hintIcon.setStyle("-fx-font-size: 48; -fx-text-fill: #f39c12;");
+            
+            Label hintTitle = new Label("Here's Your Hint!");
+            hintTitle.setStyle("-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+            
+            // Hint content
+            Label hintText = new Label("The word contains the letter:");
+            hintText.setStyle("-fx-font-size: 16; -fx-text-fill: #7f8c8d;");
+            
+            Label letterLabel = new Label(String.valueOf(hintLetter));
+            letterLabel.setStyle("-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #3498db; -fx-background-color: #ecf0f1; -fx-padding: 10 20; -fx-border-color: #bdc3c7; -fx-border-width: 1; -fx-border-radius: 8;");
+            letterLabel.setAlignment(Pos.CENTER);
+            letterLabel.setPrefWidth(80);
+            
+            // Cost indicator
+            Label costLabel = new Label("Cost: 10 💎");
+            costLabel.setStyle("-fx-font-size: 14; -fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+            
+            // Add all elements to content
+            content.getChildren().addAll(hintIcon, hintTitle, hintText, letterLabel, costLabel);
+            
+            // Set up dialog buttons
+            ButtonType useHintButton = new ButtonType("Use Hint", ButtonBar.ButtonData.OK_DONE);
+            ButtonType cancelButton = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+            hintDialog.getDialogPane().getButtonTypes().addAll(useHintButton, cancelButton);
+            
+            // Style the buttons
+            Button useHintBtn = (Button) hintDialog.getDialogPane().lookupButton(useHintButton);
+            Button cancelBtn = (Button) hintDialog.getDialogPane().lookupButton(cancelButton);
+            
+            useHintBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 6; -fx-cursor: hand;");
+            cancelBtn.setStyle("-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 6; -fx-cursor: hand;");
+            
+            hintDialog.getDialogPane().setContent(content);
+            hintDialog.getDialogPane().setStyle("-fx-background-color: transparent;");
+            
+            // Show dialog and handle result
+            Optional<String> result = hintDialog.showAndWait();
+            if (result.isPresent() && result.get().equals("Use Hint")) {
+                // Apply the hint
+                handleLetterGuess(hintLetter);
+            }
+        } else {
+            // No hints available
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("💡 Hint");
+            alert.setHeaderText("No Hints Available");
+            alert.setContentText("You've already guessed all the letters!");
+            
+            // Style the alert
+            DialogPane dialogPane = alert.getDialogPane();
+            dialogPane.setStyle("-fx-background-color: white; -fx-border-color: #e74c3c; -fx-border-width: 2; -fx-border-radius: 10;");
+            
+            alert.showAndWait();
+        }
     }
     
     private void showGameOverDialog() {
         String message;
         String title;
+        String icon;
         
         if (gameLogic.isGameWon()) {
             title = "🎉 Congratulations!";
+            icon = "🏆";
             message = "You won! The word was: " + gameLogic.getCurrentWord() + 
                      "\nScore: " + gameLogic.getScore() + 
                      "\nLevel: " + gameLogic.getLevel();
         } else {
             title = "💀 Game Over";
+            icon = "💀";
             message = "You lost! The word was: " + gameLogic.getCurrentWord() + 
                      "\nScore: " + gameLogic.getScore() + 
                      "\nLevel: " + gameLogic.getLevel();
         }
         
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        // Create custom game over dialog
+        Dialog<String> gameOverDialog = new Dialog<>();
+        gameOverDialog.setTitle(title);
+        gameOverDialog.initModality(Modality.APPLICATION_MODAL);
         
+        // Set up the dialog content
+        VBox content = new VBox(15);
+        content.setAlignment(Pos.CENTER);
+        content.setPadding(new Insets(20));
+        
+        String borderColor = gameLogic.isGameWon() ? "#27ae60" : "#e74c3c";
+        content.setStyle("-fx-background-color: white; -fx-border-color: " + borderColor + "; -fx-border-width: 2; -fx-border-radius: 10;");
+        
+        // Game result icon and title
+        Label resultIcon = new Label(icon);
+        resultIcon.setStyle("-fx-font-size: 48; -fx-text-fill: " + (gameLogic.isGameWon() ? "#27ae60" : "#e74c3c") + ";");
+        
+        Label resultTitle = new Label(title);
+        resultTitle.setStyle("-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;");
+        
+        // Game result details
+        Label resultDetails = new Label(message);
+        resultDetails.setStyle("-fx-font-size: 16; -fx-text-fill: #7f8c8d; -fx-alignment: center;");
+        resultDetails.setWrapText(true);
+        resultDetails.setPrefWidth(300);
+        
+        // Add all elements to content
+        content.getChildren().addAll(resultIcon, resultTitle, resultDetails);
+        
+        // Set up dialog buttons
+        ButtonType newGameButton = new ButtonType("New Game", ButtonBar.ButtonData.OK_DONE);
+        gameOverDialog.getDialogPane().getButtonTypes().add(newGameButton);
+        
+        // Style the button
+        Button newGameBtn = (Button) gameOverDialog.getDialogPane().lookupButton(newGameButton);
+        newGameBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-background-radius: 6; -fx-cursor: hand;");
+        
+        gameOverDialog.getDialogPane().setContent(content);
+        gameOverDialog.getDialogPane().setStyle("-fx-background-color: transparent;");
+        
+        // Show dialog and handle result
+        gameOverDialog.showAndWait();
         startNewGame();
     }
     
