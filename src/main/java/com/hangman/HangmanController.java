@@ -92,7 +92,8 @@ public class HangmanController {
                "-fx-border-width: 2; " +
                "-fx-border-radius: 6; " +
                "-fx-cursor: hand; " +
-               "-fx-font-weight: bold;";
+               "-fx-font-weight: bold; " +
+               "-fx-transition: all 0.2s ease-in-out;";
     }
     
     private String getCorrectButtonStyle() {
@@ -103,7 +104,8 @@ public class HangmanController {
                "-fx-border-width: 2; " +
                "-fx-border-radius: 6; " +
                "-fx-cursor: hand; " +
-               "-fx-font-weight: bold;";
+               "-fx-font-weight: bold; " +
+               "-fx-transition: all 0.3s ease-in-out;";
     }
     
     private String getWrongButtonStyle() {
@@ -114,7 +116,8 @@ public class HangmanController {
                "-fx-border-width: 2; " +
                "-fx-border-radius: 6; " +
                "-fx-cursor: hand; " +
-               "-fx-font-weight: bold;";
+               "-fx-font-weight: bold; " +
+               "-fx-transition: all 0.3s ease-in-out;";
     }
     
     private void setupTimer() {
