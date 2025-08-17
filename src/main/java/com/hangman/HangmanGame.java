@@ -11,14 +11,24 @@ public class HangmanGame extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/hangman.fxml"));
-        Scene scene = new Scene(root, 1000, 700);
+        
+        // Increased window size to accommodate all content including instructions
+        Scene scene = new Scene(root, 1200, 900);
         
         // Load CSS styles
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         
         primaryStage.setTitle("🎯 Hangman Game - JavaFX Edition");
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        
+        // Make window resizable for better user experience
+        primaryStage.setResizable(true);
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(800);
+        
+        // Center the window on screen
+        primaryStage.centerOnScreen();
+        
         primaryStage.show();
     }
 

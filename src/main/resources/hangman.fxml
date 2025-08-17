@@ -7,97 +7,131 @@
 <?import javafx.scene.text.Font?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="com.hangman.HangmanController" spacing="15" 
-      style="-fx-background-color: white; -fx-padding: 20;">
+      fx:controller="com.hangman.HangmanController" spacing="20" 
+      styleClass="game-container"
+      style="-fx-padding: 20;">
     
     <!-- Top Bar with Game Status/Scores -->
-    <HBox spacing="30" alignment="CENTER_LEFT">
+    <HBox spacing="30" alignment="CENTER_LEFT" styleClass="game-panel"
+           style="-fx-padding: 15; -fx-min-height: 80;">
         <!-- Diamonds/Currency -->
-        <HBox spacing="8" alignment="CENTER_LEFT">
-            <Label text="💎" style="-fx-font-size: 24;"/>
-            <Label fx:id="scoreLabel" text="80" 
-                   style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="💎" style="-fx-font-size: 28;"/>
+            <VBox spacing="2">
+                <Label text="DIAMONDS" style="-fx-font-size: 10; -fx-text-fill: #6c757d; -fx-font-weight: bold;"/>
+                <Label fx:id="scoreLabel" text="80" 
+                       styleClass="score-display"/>
+            </VBox>
         </HBox>
         
         <!-- Trophy/Score -->
-        <HBox spacing="8" alignment="CENTER_LEFT">
-            <Label text="🏆" style="-fx-font-size: 24;"/>
-            <Label fx:id="levelLabel" text="0" 
-                   style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
+        <HBox spacing="12" alignment="CENTER_LEFT">
+            <Label text="🏆" style="-fx-font-size: 28;"/>
+            <VBox spacing="2">
+                <Label text="LEVEL" style="-fx-font-size: 10; -fx-text-fill: #6c757d; -fx-font-weight: bold;"/>
+                <Label fx:id="levelLabel" text="0" 
+                       styleClass="level-display"/>
+            </VBox>
         </HBox>
         
         <Region HBox.hgrow="ALWAYS"/>
         
+        <!-- Timer Display -->
+        <VBox spacing="2" alignment="CENTER_RIGHT">
+            <Label text="TIME REMAINING" style="-fx-font-size: 10; -fx-text-fill: #6c757d; -fx-font-weight: bold;"/>
+            <Label fx:id="timerLabel" text="60s" 
+                   styleClass="timer-display"/>
+        </VBox>
+        
         <!-- Pause Button -->
         <Button fx:id="newGameButton" text="⏸" 
-                style="-fx-font-size: 18; -fx-padding: 8; -fx-background-color: transparent; -fx-border-color: #2c3e50; -fx-border-width: 2; -fx-border-radius: 20; -fx-min-width: 40; -fx-min-height: 40; -fx-cursor: hand;"/>
+                styleClass="animated-button"
+                style="-fx-font-size: 20; -fx-padding: 12; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-width: 2; -fx-border-radius: 25; -fx-min-width: 50; -fx-min-height: 50; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);"/>
     </HBox>
     
     <!-- Main game area -->
-    <HBox spacing="40" VBox.vgrow="ALWAYS" alignment="TOP_CENTER">
+    <HBox spacing="40" VBox.vgrow="ALWAYS" alignment="TOP_CENTER" style="-fx-padding: 0 20;">
         
         <!-- Left side - Game info and keyboard -->
-        <VBox fx:id="gameInfoBox" spacing="25" prefWidth="450" alignment="TOP_CENTER">
+        <VBox fx:id="gameInfoBox" spacing="25" prefWidth="550" alignment="TOP_CENTER">
             <!-- Category Hint -->
-            <VBox alignment="CENTER" spacing="10" 
-                  style="-fx-background-color: transparent; -fx-padding: 15; -fx-border-color: #2c3e50; -fx-border-width: 2; -fx-border-radius: 8;">
-                <Label fx:id="categoryLabel" text="Kitchen Tools" 
-                       style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-alignment: center;"/>
+            <VBox alignment="CENTER" spacing="15" 
+                  styleClass="category-display"
+                  style="-fx-min-height: 100;">
+                <Label text="CATEGORY" style="-fx-font-size: 12; -fx-text-fill: #6c757d; -fx-font-weight: bold; -fx-alignment: center;"/>
+                <Label fx:id="categoryLabel" text="Programming Languages" 
+                       style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-alignment: center; -fx-wrap-text: true;"/>
             </VBox>
             
             <!-- Word Blanks -->
-            <VBox alignment="CENTER" spacing="10">
-                <Label text="Guess the word:" style="-fx-font-size: 16; -fx-text-fill: #7f8c8d;"/>
-                <Label fx:id="wordLabel" text="_ _ _ _ _" 
-                       style="-fx-font-size: 28; -fx-font-weight: bold; -fx-font-family: 'Consolas'; -fx-text-fill: #2c3e50; -fx-letter-spacing: 8;"/>
+            <VBox alignment="CENTER" spacing="15" 
+                  styleClass="word-display"
+                  style="-fx-min-height: 120;">
+                <Label text="GUESS THE WORD" style="-fx-font-size: 12; -fx-text-fill: #6c757d; -fx-font-weight: bold;"/>
+                <Label fx:id="wordLabel" text="_ _ _ _ _ _ _ _ _ _" 
+                       style="-fx-font-size: 28; -fx-font-weight: bold; -fx-font-family: 'Consolas'; -fx-text-fill: #2c3e50; -fx-letter-spacing: 8; -fx-padding: 10; -fx-wrap-text: true;"/>
             </VBox>
             
             <!-- On-screen Keyboard -->
-            <VBox spacing="5" alignment="TOP_CENTER">
-                <Label text="Keyboard" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                <GridPane fx:id="keyboardGrid" hgap="4" vgap="4" 
-                          style="-fx-background-color: transparent; -fx-padding: 8; -fx-border-color: #bdc3c7; -fx-border-width: 1; -fx-border-radius: 8;"/>
+            <VBox spacing="15" alignment="TOP_CENTER" 
+                  styleClass="game-panel"
+                  style="-fx-min-height: 200;">
+                <Label text="VIRTUAL KEYBOARD" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+                <GridPane fx:id="keyboardGrid" hgap="8" vgap="8" 
+                          style="-fx-background-color: transparent; -fx-padding: 20;"/>
             </VBox>
         </VBox>
         
         <!-- Right side - Game progress and hangman -->
-        <VBox spacing="25" prefWidth="450" alignment="TOP_CENTER">
-            <!-- Level Indicator -->
-            <Label fx:id="levelLabel" text="Level 1" 
-                   style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #3498db; -fx-alignment: center;"/>
+        <VBox spacing="25" prefWidth="550" alignment="TOP_CENTER">
+            <!-- Progress Indicators -->
+            <HBox spacing="25" alignment="CENTER">
+                <VBox spacing="5" alignment="CENTER" 
+                      styleClass="progress-display"
+                      style="-fx-min-width: 120; -fx-min-height: 80;">
+                    <Label text="WRONG GUESSES" style="-fx-font-size: 10; -fx-text-fill: #6c757d; -fx-font-weight: bold;"/>
+                    <Label fx:id="wrongGuessesLabel" text="0/6" 
+                           style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"/>
+                </VBox>
+                
+                <VBox spacing="5" alignment="CENTER" 
+                      styleClass="progress-display"
+                      style="-fx-min-width: 120; -fx-min-height: 80;">
+                    <Label text="HINTS LEFT" style="-fx-font-size: 10; -fx-text-fill: #6c757d; -fx-font-weight: bold;"/>
+                    <Label fx:id="hintsLeftLabel" text="3" 
+                           style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #f39c12;"/>
+                </VBox>
+            </HBox>
             
             <!-- Hangman Drawing -->
-            <Canvas fx:id="hangmanCanvas" width="300" height="300" 
-                    style="-fx-border-color: #bdc3c7; -fx-border-width: 2; -fx-background-color: white; -fx-border-radius: 8;"/>
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="HANGMAN" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #6c757d;"/>
+                <Canvas fx:id="hangmanCanvas" width="350" height="350" 
+                        styleClass="hangman-canvas"/>
+            </VBox>
             
-            <!-- Timer and Hint -->
-            <HBox spacing="20" alignment="CENTER">
-                <Label fx:id="timerLabel" text="Time: 60s" 
-                       style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
-                
-                <HBox spacing="8" alignment="CENTER_LEFT">
-                    <Label text="💎" style="-fx-font-size: 18;"/>
-                    <Label text="10" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
-                </HBox>
-                
-                <Button fx:id="hintButton" text="💡" 
-                        style="-fx-font-size: 18; -fx-padding: 8; -fx-background-color: transparent; -fx-border-color: #2c3e50; -fx-border-width: 2; -fx-border-radius: 20; -fx-min-width: 40; -fx-min-height: 40; -fx-cursor: hand;"/>
-            </HBox>
+            <!-- Hint Button -->
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="NEED HELP?" style="-fx-font-size: 12; -fx-text-fill: #6c757d; -fx-font-weight: bold;"/>
+                <Button fx:id="hintButton" text="💡 GET HINT" 
+                        styleClass="hint-button animated-button"
+                        style="-fx-font-size: 16; -fx-font-weight: bold; -fx-padding: 15 30; -fx-min-width: 200; -fx-min-height: 50;"/>
+            </VBox>
         </VBox>
         
     </HBox>
     
     <!-- Instructions -->
-    <VBox style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-border-color: #dee2e6; -fx-border-width: 1; -fx-border-radius: 8;">
-        <Label text="Instructions:" style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #2c3e50;"/>
-        <HBox spacing="40" alignment="CENTER">
-            <VBox spacing="5">
-                <Label text="• Click on letters or use your keyboard to guess" style="-fx-text-fill: #6c757d;"/>
-                <Label text="• You have 6 wrong guesses allowed" style="-fx-text-fill: #6c757d;"/>
+    <VBox styleClass="game-panel instructions-section">
+        <Label text="HOW TO PLAY" styleClass="instructions-title"/>
+        <HBox spacing="80" alignment="CENTER" style="-fx-padding: 10 0;">
+            <VBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="• Click letters or use your keyboard to guess" styleClass="instructions-text"/>
+                <Label text="• You have 6 wrong guesses allowed" styleClass="instructions-text"/>
             </VBox>
-            <VBox spacing="5">
-                <Label text="• Complete the word before time runs out to win!" style="-fx-text-fill: #6c757d;"/>
-                <Label text="• Use the hint button if you're stuck" style="-fx-text-fill: #6c757d;"/>
+            <VBox spacing="12" alignment="CENTER_LEFT">
+                <Label text="• Complete the word before time runs out!" styleClass="instructions-text"/>
+                <Label text="• Use hints if you're stuck (costs 10 diamonds)" styleClass="instructions-text"/>
             </VBox>
         </HBox>
     </VBox>
