@@ -111,13 +111,36 @@
     -fx-border-radius: 8;
 }
 
-/* Keyboard grid styling */
+/* Keyboard grid styling - Updated to match the image */
 .keyboard-grid {
-    -fx-background-color: transparent;
+    -fx-background-color: #f5f5f5;
     -fx-padding: 15;
-    -fx-border-color: #bdc3c7;
+    -fx-border-color: #d3d3d3;
     -fx-border-width: 1;
     -fx-border-radius: 8;
+}
+
+/* Individual keyboard button styling */
+.keyboard-grid .button {
+    -fx-background-color: #f0f0f0;
+    -fx-text-fill: #1e3a8a;
+    -fx-background-radius: 12;
+    -fx-border-color: #c0c0c0;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.keyboard-grid .button:hover {
+    -fx-background-color: #e8e8e8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.keyboard-grid .button:pressed {
+    -fx-background-color: #d8d8d8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 2, 0, 0, 1);
 }
 
 /* Instructions panel */
